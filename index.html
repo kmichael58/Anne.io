@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gift Card</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to right, #2F0743, #41295a);
+        }
+
+        .gift-card {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            perspective: 1500px;
+        }
+
+        .book {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transform-origin: center;
+            transition: transform 1s ease-in-out, scale 1s ease-in-out;
+            transform: rotateY(0deg) scale(1);
+        }
+
+        .card-half {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            border-radius: 15px;
+            box-shadow: 0 2rem 3rem rgba(255, 0, 153, 0.5);
+            backface-visibility: hidden;
+        }
+
+        .left {
+            left: 0;
+            transform-origin: right;
+        }
+
+        .right {
+            right: 0;
+            transform-origin: left;
+            border-radius: 0 15px 15px 0;
+        }
+
+        .gift-card.open .book {
+            transform: rotateY(-180deg) scale(1.1);
+        }
+
+        .inner-pages {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            visibility: hidden;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0 4rem 3.5rem rgba(109, 213, 250, 0.5);
+            transform: rotateY(180deg);
+            backface-visibility: hidden;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .inner-pages img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 50%;
+            width: 7rem;
+            height: 7rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.5s ease-in-out;
+            box-shadow: 0.2rem  0.7rem 0.7rem #6b6a6a;
+        }
+
+        .inner-pages img.moving-up {
+            position: sticky;
+            top: 10px;
+            transform: translateX(-50%);
+            z-index: 2;
+        }
+
+        .inner-pages p {
+            font-size: 16px;
+            font-weight: 200;
+            text-align: justify;
+            color: #000;
+            margin: 0 15px;
+            padding: 10px;
+            overflow-y: auto;
+            height: calc(100% - 100px); /* Adjust height to account for image */
+        }
+
+        .input-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 2;
+            transform: rotateY(0deg);
+            backface-visibility: hidden;
+        }
+
+        .input-container input {
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            outline: none;
+            margin-bottom: 10px;
+            width: 80%;
+        }
+
+        .input-container button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .input-container button:hover {
+            background-color: #0056b3;
+        }
+        .heart {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: 50px;
+            color: #93291E;
+            transition: transform 2s ease-in-out;
+            z-index: -1;
+        }
+
+        .heart.zoom {
+            transform: translate(-50%, -50%) scale(50);
+        }
+    </style>
+</head>
+<body>
+<div class="gift-card" id="giftCard">
+    <div class="book" id="book">
+        <div class="card-half left"></div>
+        <div class="card-half right"></div>
+        <div class="inner-pages" id="innerPages">
+            <img id="image" src="docs/anne.jpg" alt="Placeholder Image">
+            <p id="typedText"></p>
+        </div>
+        <div class="input-container" id="inputContainer">
+            <input type="text" id="nameInput" placeholder="First name..." aria-label="First name">
+            <button onclick="openGiftCard()" aria-label="Open Gift Card">Open</button>
+        </div>
+    </div>
+</div>
+
+<div class="heart" id="heart">❤</div>
+
+<audio id="backgroundMusic">
+    <source src="docs/you.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
+</audio>
+
+<script>
+    function openGiftCard() {
+        const nameInput = document.getElementById("nameInput").value.trim().toLowerCase();
+        const giftCard = document.getElementById("giftCard");
+        const inputContainer = document.getElementById("inputContainer");
+        const innerPages = document.getElementById("innerPages");
+        const image = document.getElementById("image");
+        const typedText = document.getElementById("typedText");
+        const backgroundMusic = document.getElementById("backgroundMusic");
+
+        if (nameInput === "maryanne") {
+            inputContainer.style.visibility = "hidden";
+            giftCard.classList.add("open");
+
+            // Play background music
+            backgroundMusic.play();
+
+            setTimeout(() => {
+                innerPages.style.visibility = "visible";
+                typedText.textContent = ""; // Clear previous text
+                typeText(
+                    "I have known you for only one year and i can say your a the greatest person i have met in my life and u made my year the best and gave me hope and joy.Your the year has not been easy for you but as strong as you are u made it through and your finally done with the the teen life.I wish you the best in life and have more years. I wish i could be with u in all of the coming years in your life. Always remember i love you HAPPY BIRTHDAY ANNE.",
+                    "typedText",
+                    50,
+                    image
+                );
+            }, 1000);
+        } else {
+            alert("Invalid name.");
+        }
+    }
+    
+    setTimeout(() => {
+        heart.classList.add("zoom");
+        document.body.style.backgroundColor = "black";
+    }, 2000);
+
+    function typeText(text, elementId, delay, image) {
+        const element = document.getElementById(elementId);
+        let i = 0;
+
+        function type() {
+            if (i < text.length) {
+                element.textContent += text.charAt(i);
+                if (i > 20) {
+                    image.classList.add("moving-up");
+                }
+                i++;
+                setTimeout(type, delay);
+            }
+        }
+        type();
+    }
+</script>
+</body>
+</html>
